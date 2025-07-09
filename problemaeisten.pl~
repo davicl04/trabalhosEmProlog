@@ -1,0 +1,224 @@
+% Problema de Eisten
+% Cores
+cor(amarela).
+cor(azul).
+cor(branca).
+cor(verde).
+cor(vermelha).
+
+% Nacionalidade
+nacionalidade(alemao).
+nacionalidade(dinamarques).
+nacionalidade(ingles).
+nacionalidade(noruegues).
+nacionalidade(sueco).
+
+% Bebidas
+
+bebida(agua).
+bebida(cafe).
+bebida(cha).
+bebida(cerveja).
+bebida(leite).
+
+% Cigarro
+cigarro(blends).
+cigarro(bluemaster).
+cigarro(dunhill).
+cigarro(pallmall).
+cigarro(prince).
+
+% Animal
+animal(cachorros).
+animal(cavalos).
+animal(gatos).
+animal(passaros).
+animal(peixes).
+
+% Auxiliar
+alldifferent([]).
+alldifferent([H|T]) :-
+    \+(member(H, T)),
+    alldifferent(T).
+
+% Imprimir lista
+imprime_lista([]) :- write('\n\n FIM do imprime_lista \n').
+
+imprime_lista([H|T]) :-
+	write('\n......................................\n'),
+	write(H), write(' : '),
+	imprime_lista(T).
+
+main :-
+    statistics(cputime, T1),
+    modelo(  [A1, A2, A3, A4, A5]  ),
+    imprime_lista(  [A1, A2, A3, A4, A5]  ),
+    statistics(cputime, T2),
+    Tempo_BUSCA is T2 - T1,
+    format('\n T1: ~f \t T2: ~f  msec', [T1, T2]),
+    format('\n Tempo total: ~10f  msec', Tempo_BUSCA).
+
+main :-
+        nl,
+        write('xxxx AQUI SOH PODE VIR UMA RESPOSTA ....'),
+        nl,
+        write('........ UFA apos o fail .......').
+
+modelo([
+    (Cor_1, Nacionalidade_1, Bebida_1, Cigarro_1, Animal_1),
+    (Cor_2, Nacionalidade_2, Bebida_2, Cigarro_2, Animal_2),
+    (Cor_3, Nacionalidade_3, Bebida_3, Cigarro_3, Animal_3),
+    (Cor_4, Nacionalidade_4, Bebida_4, Cigarro_4, Animal_4),
+    (Cor_5, Nacionalidade_5, Bebida_5, Cigarro_5, Animal_5)
+        ]):-
+
+    cor(Cor_1),
+    cor(Cor_2),
+    cor(Cor_3),
+    cor(Cor_4),
+    cor(Cor_5),
+
+    (Cor_2 == azul),
+
+    alldifferent([Cor_1, Cor_2, Cor_3, Cor_4, Cor_5]),
+
+    % A casa Verde fica do lado esquerdo da casa Branca
+    (
+    (Cor_1 == verde, Cor_2 == branca);
+    (Cor_2 == verde, Cor_3 == branca);
+    (Cor_3 == verde, Cor_4 == branca);
+    (Cor_4 == verde, Cor_5 == branca)
+    ),
+
+    nacionalidade(Nacionalidade_1),
+    nacionalidade(Nacionalidade_2),
+    nacionalidade(Nacionalidade_3),
+    nacionalidade(Nacionalidade_4),
+    nacionalidade(Nacionalidade_5),
+
+    % O Norueguês vive na primeira casa.
+    (Nacionalidade_1 == noruegues),
+
+    alldifferent([Nacionalidade_1, Nacionalidade_2, Nacionalidade_3, Nacionalidade_4, Nacionalidade_5]),
+
+    % O Inglês vive na casa Vermelha.
+    (
+    (Nacionalidade_1 == ingles, Cor_1 == vermelha);
+    (Nacionalidade_2 == ingles, Cor_2 == vermelha);
+    (Nacionalidade_3 == ingles, Cor_3 == vermelha);
+    (Nacionalidade_4 == ingles, Cor_4 == vermelha);
+    (Nacionalidade_5 == ingles, Cor_5 == vermelha)
+    ),
+
+    bebida(Bebida_1),
+    bebida(Bebida_2),
+    bebida(Bebida_3),
+    bebida(Bebida_4),
+    bebida(Bebida_5),
+
+    % O homem que vive na casa do meio bebe Leite
+    (Bebida_3 == leite),
+
+    alldifferent([Bebida_1, Bebida_2, Bebida_3, Bebida_4, Bebida_5]),
+
+    % O Dinamarquês bebe Chá.
+    (
+    (Nacionalidade_1 == dinamarques, Bebida_1 == cha);
+    (Nacionalidade_2 == dinamarques, Bebida_2 == cha);
+    (Nacionalidade_3 == dinamarques, Bebida_3 == cha);
+    (Nacionalidade_4 == dinamarques, Bebida_4 == cha);
+    (Nacionalidade_5 == dinamarques, Bebida_5 == cha)
+    ),
+
+    % O homem que vive na casa Verde bebe Café.
+    (
+    (Cor_1 == verde, Bebida_1 = cafe);
+    (Cor_2 == verde, Bebida_2 = cafe);
+    (Cor_3 == verde, Bebida_3 = cafe);
+    (Cor_4 == verde, Bebida_4 = cafe);
+    (Cor_5 == verde, Bebida_5 = cafe)
+    ),
+
+    cigarro(Cigarro_1),
+    cigarro(Cigarro_2),
+    cigarro(Cigarro_3),
+    cigarro(Cigarro_4),
+    cigarro(Cigarro_5),
+
+    alldifferent([Cigarro_1, Cigarro_2, Cigarro_3, Cigarro_4, Cigarro_5]),
+
+    % O homem que fuma Blue Master bebe Cerveja.
+    (
+    (Cigarro_1 == bluemaster, Bebida_1 == cerveja);
+    (Cigarro_2 == bluemaster, Bebida_2 == cerveja);
+    (Cigarro_3 == bluemaster, Bebida_3 == cerveja);
+    (Cigarro_4 == bluemaster, Bebida_4 == cerveja);
+    (Cigarro_5 == bluemaster, Bebida_5 == cerveja)
+    ),
+
+    % O homem que fuma Blends é vizinho do que bebe Água.
+    (
+    (Cigarro_1 == blends, Bebida_2 == agua);
+    (Cigarro_2 == blends, (Bebida_1 == agua; Bebida_3 == agua));
+    (Cigarro_3 == blends, (Bebida_2 == agua; Bebida_4 == agua));
+    (Cigarro_4 == blends, (Bebida_3 == agua; Bebida_5 == agua));
+    (Cigarro_5 == blends, Bebida_4 == agua)
+    ),
+
+    % O homem que vive na casa Amarela fuma Dunhill.
+    (
+    (Cigarro_1 == dunhill, Cor_1 == amarela);
+    (Cigarro_2 == dunhill, Cor_2 == amarela);
+    (Cigarro_3 == dunhill, Cor_3 == amarela);
+    (Cigarro_4 == dunhill, Cor_4 == amarela);
+    (Cigarro_5 == dunhill, Cor_5 == amarela)
+    ),
+
+    % Alemao fuma prince
+
+    (
+    (Cigarro_1 == prince, Nacionalidade_1 == alemao);
+    (Cigarro_2 == prince, Nacionalidade_2 == alemao);
+    (Cigarro_3 == prince, Nacionalidade_3 == alemao);
+    (Cigarro_4 == prince, Nacionalidade_4 == alemao);
+    (Cigarro_5 == prince, Nacionalidade_5 == alemao)
+    ),
+
+    animal(Animal_1),
+    animal(Animal_2),
+    animal(Animal_3),
+    animal(Animal_4),
+    animal(Animal_5),
+
+    alldifferent([Animal_1, Animal_2, Animal_3, Animal_4, Animal_5]),
+
+    % O Sueco tem Cachorros como animais de estimação.
+    (
+    (Nacionalidade_1 == sueco, Animal_1 == cachorros);
+    (Nacionalidade_2 == sueco, Animal_2 == cachorros);
+    (Nacionalidade_3 == sueco, Animal_3 == cachorros);
+    (Nacionalidade_4 == sueco, Animal_4 == cachorros);
+    (Nacionalidade_5 == sueco, Animal_5 == cachorros)
+    ),
+
+    % O homem que fuma Pall Mall cria Pássaros.
+    (
+    (Cigarro_1 == pallmall, Animal_1 == passaros);
+    (Cigarro_2 == pallmall, Animal_2 == passaros);
+    (Cigarro_3 == pallmall, Animal_3 == passaros);
+    (Cigarro_4 == pallmall, Animal_4 == passaros);
+    (Cigarro_5 == pallmall, Animal_5 == passaros)
+    ),
+
+    % O homem que fuma Blends vive ao lado do que tem Gatos
+
+    (
+    (Cigarro_1 == blends, Animal_2 == gatos);
+    (Cigarro_2 == blends, (Animal_1 == gatos; Animal_3 == gatos));
+    (Cigarro_3 == blends, (Animal_2 == gatos; Animal_4 == gatos));
+    (Cigarro_4 == blends, (Animal_3 == gatos; Animal_5 == gatos));
+    (Cigarro_5 == blends, Animal_4 == gatos)
+    ),
+
+    nl,
+    write('CHEGAMOS AO FIM DO MODELO').
